@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="style2.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <title>Signin/Signup</title>
+    <style>
+        /* Feedback messages — sit nicely inside the existing forms */
+        .msg {
+            font-size: 11px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 10px;
+            width: 100%;
+            text-align: center;
+            display: none;
+        }
+        .msg.error   { background: rgba(255,60,60,0.15); border: 1px solid rgba(255,60,60,0.4); color: #ff6b6b; display: block; }
+        .msg.success { background: rgba(60,255,120,0.1); border: 1px solid rgba(60,255,120,0.3); color: #4dff91; display: block; }
+
+        .spinner {
+            display: inline-block;
+            width: 12px; height: 12px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 5px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+
+<body>
+    <div class="myh1"><center><h1>Login or Signup</h1></center></div> <hr style="width: 50%;"><br>
+
+    <div class="container" id="container">
+
+       
+        <div class="form-container sign-up">
+            <form onsubmit="return false">
+                <h1>Create Account</h1>
+                <span>Use your email for registration</span>
+                <input type="text"     id="su-name"  placeholder="Name" />
+                <input type="email"    id="su-email" placeholder="Email" />
+                <input type="password" id="su-pass"  placeholder="Password" />
+                <button id="signupBtn" onclick="handleSignUp()">Sign Up</button>
+                <div class="msg" id="signupMsg"></div>
+            </form>
+        </div>
+
+      
+        <div class="form-container sign-in">
+            <form onsubmit="return false">
+                <h1>Sign In</h1>
+                <span>Use your email to log in</span>
+                <input type="email"    id="si-email" placeholder="Email" />
+                <input type="password" id="si-pass"  placeholder="Password" />
+                <button id="signinBtn" onclick="handleSignIn()">Sign In</button>
+                <div class="msg" id="signinMsg"></div>
+            </form>
+        </div>
+
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Login</h1>
+                    <p>Enter your personal details to use all of site features</p>
+                    <button class="hidden" id="login">Sign In</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Create Account!</h1>
+                    <p>Register with your personal details to use all of site features</p>
+                    <button class="hidden" id="register">Sign Up</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+      
+       
+        const SUPABASE_URL = 'https://delnpsartpfmzcuubxdo.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRlbG5wc2FydHBmbXpjdXVieGRvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3NjIyMDIsImV4cCI6MjA4OTMzODIwMn0.8UxsD2xopKMSuK_kjS3dydhG_bBoL0Ve5APtzjBtfuk';
+        const AFTER_LOGIN  = 'live-score.html'; 
+       
+
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        
+        sb.auth.getSession().then(({ data }) => {
+            if (data.session) window.location.replace(AFTER_LOGIN);
+        });
+
+      
+        const container   = document.getElementById('container');
+        const registerBtn = document.getElementById('register');
+        const loginBtn    = document.getElementById('login');
+
+        registerBtn.addEventListener('click', () => container.classList.add('active'));
+        loginBtn.addEventListener('click',    () => container.classList.remove('active'));
+
+        
+        function showMsg(id, text, type) {
+            const el = document.getElementById(id);
+            el.textContent = text;
+            el.className = 'msg ' + type;
+        }
+        function clearMsg(id) {
+            const el = document.getElementById(id);
+            el.textContent = '';
+            el.className = 'msg';
+        }
+        function setLoading(btnId, loading, label) {
+            const btn = document.getElementById(btnId);
+            btn.disabled = loading;
+            btn.innerHTML = loading
+                ? '<span class="spinner"></span>Please wait…'
+                : label;
+        }
+
+       
+        async function handleSignUp() {
+            const name  = document.getElementById('su-name').value.trim();
+            const email = document.getElementById('su-email').value.trim();
+            const pass  = document.getElementById('su-pass').value;
+            clearMsg('signupMsg');
+
+            if (!name || !email || !pass)
+                return showMsg('signupMsg', 'Please fill in all fields.', 'error');
+            if (pass.length < 6)
+                return showMsg('signupMsg', 'Password must be at least 6 characters.', 'error');
+
+            setLoading('signupBtn', true, 'Sign Up');
+            const { error } = await sb.auth.signUp({
+                email,
+                password: pass,
+                options: { data: { full_name: name } }
+            });
+            setLoading('signupBtn', false, 'Sign Up');
+
+            error
+                ? showMsg('signupMsg', error.message, 'error')
+                : showMsg('signupMsg', '✓ Account created! Check your email to confirm, then sign in.', 'success');
+        }
+
+        
+        async function handleSignIn() {
+            const email = document.getElementById('si-email').value.trim();
+            const pass  = document.getElementById('si-pass').value;
+            clearMsg('signinMsg');
+
+            if (!email || !pass)
+                return showMsg('signinMsg', 'Please fill in both fields.', 'error');
+
+            setLoading('signinBtn', true, 'Sign In');
+            const { error } = await sb.auth.signInWithPassword({ email, password: pass });
+            setLoading('signinBtn', false, 'Sign In');
+
+            if (error) {
+                showMsg('signinMsg', error.message, 'error');
+            } else {
+                showMsg('signinMsg', '✓ Signed in! Redirecting…', 'success');
+                setTimeout(() => window.location.href = AFTER_LOGIN, 800);
+            }
+        }
+
+        
+        document.addEventListener('keydown', e => {
+            if (e.key !== 'Enter') return;
+            container.classList.contains('active') ? handleSignUp() : handleSignIn();
+        });
+    </script>
+
+</body>
+</html>
