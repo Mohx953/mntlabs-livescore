@@ -31,6 +31,7 @@ async function requireAuth() {
     // Auto-fill any element with id="user-email"
     const el = document.getElementById('user-email');
     if (el) el.textContent = data.session.user.email;
+    document.querySelectorAll('.user-email-show').forEach(el => el.textContent = data.session.user.email);
 
     return data.session;
 }

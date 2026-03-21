@@ -32,14 +32,17 @@
                 <a href="https://unibudget.ct.ws/" class="link">UniBudget</a>
                 <a href="https://mohx953.github.io/mntlabs-weathora/" class="link">Weathora</a>
                 <a href="https://mntlabs-mahamule.wuaze.com" class="link">Developer</a>
-                <button class="btn-signup" onclick="signOut()">Sign Out</button>
-                
+                <button class="btn-signup lg-hidden" onclick="signOut()" >Sign Out</button>
+                <div class="user-pill" id="acc">
+                    <button><i class="bx bx-user-circle" style="font-size:18px"></i><br>
+                    <span id="user-email">Loading…</span></button>
+                </div>               
                 <span class="icon" id="close"><i class="bx bx-x"></i> </span>
             </nav>
             <div class="controls">
-                <div class="user-pill">
-                    <i class="bx bx-user-circle" style="font-size:18px"></i>
-                    <span id="user-email">Loading…</span>
+                <div class="user-pill pill">
+                    <i class="bx bx-user-circle" style="font-size:18px"></i> <br>
+                    <span class="user-email-show">Loading…</span>
                 </div>
                 <button class="btn-promo" style="display: none;">Live Score</button>
                 <button class="btn-signup" onclick="signOut()">Sign Out</button>
