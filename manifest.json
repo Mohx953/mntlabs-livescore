@@ -1,0 +1,21 @@
+{
+    "name": "MNT LiveScore",
+    "short_name": "MNTLive",
+    "description": "Real-time live scores from MNTLabs",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#ff0000",
+    "icons": [
+        {
+            "src": "livescore.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "livescore.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

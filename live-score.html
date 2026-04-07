@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="icon" href="livescore.png" />
+    <link rel="manifest" href="manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MntLive Score</title>
     <link rel="stylesheet" href="landing.css">
@@ -12,7 +13,7 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
 
     <!-- <script src="auth.js"></script> -->
-     <script defer crossorigin="anonymous"
+    <script defer crossorigin="anonymous"
         src="https://tender-starling-35.clerk.accounts.dev/npm/@clerk/ui@1/dist/ui.browser.js"
         type="text/javascript"></script>
 
@@ -48,19 +49,19 @@
                     <button><i class="bx bx-user-circle" style="font-size:18px"></i><br>
                         <span id="user-email">Loading…</span></button>
                 </div> -->
-                
+
                 <span class="icon" id="close"><i class="bx bx-x"></i> </span>
             </nav>
-            
+
             <div class="controls">
-                
+
                 <!-- <div class="user-pill pill">
                     <i class="bx bx-user-circle" style="font-size:18px"></i> <br>
                     <span class="user-email-show">Loading…</span>
                 </div> -->
                 <button class="btn-promo" style="display: none;">Live Score</button>
                 <!-- <button class="btn-signup" onclick="signOut()">Sign Out</button> -->
-                 <div id="user-button"></div>
+                <div id="user-button"></div>
                 <span class="icon" id="menu"><i class="bx bx-menu"></i> </span>
             </div>
         </div>
@@ -97,28 +98,32 @@
     <script src="main.js"></script>
     <script src="mntlabs-ai.js"></script>
     <script>
-    window.addEventListener('load', async function () {
-        await Clerk.load({
-            ui: { ClerkUI: window.__internal_ClerkUICtor },
+        window.addEventListener('load', async function () {
+            await Clerk.load({
+                ui: { ClerkUI: window.__internal_ClerkUICtor },
+            });
+
+            if (!Clerk.user) {
+
+                window.location.href = 'index.html';
+            }
+            Clerk.mountUserButton(document.getElementById('user-button'));
+
+            // show user email in the pills
+            // const email = Clerk.user.primaryEmailAddress.emailAddress;
+            // document.getElementById('user-email').textContent = email;
+            // document.querySelector('.user-email-show').textContent = email;
         });
 
-        if (!Clerk.user) {
-            
-            window.location.href = 'index.html';
+        function signOut() {
+            Clerk.signOut(() => window.location.href = 'index.html');
         }
-        Clerk.mountUserButton(document.getElementById('user-button'));
-
-        // show user email in the pills
-        // const email = Clerk.user.primaryEmailAddress.emailAddress;
-        // document.getElementById('user-email').textContent = email;
-        // document.querySelector('.user-email-show').textContent = email;
-    });
-
-    function signOut() {
-        Clerk.signOut(() => window.location.href = 'index.html');
-    }
-</script>
-    
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js');
+        }
+    </script>
 
 </body>
 
