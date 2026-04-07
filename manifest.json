@@ -21,19 +21,19 @@
         }
     ],
     "screenshots": [
-        {
-            "src": "screenshot-index.png",
-            "sizes": "1536x768",
-            "type": "image/png",
-            "form_factor": "wide",
-            "label": "MNT LiveScore Landing Page"
-        },
-        {
-            "src": "screenshot-livescore.png",
-            "sizes": "1536x768",
-            "type": "image/png",
-            "form_factor": "wide",
-            "label": "MNT LiveScore Live Scores"
-        }
-    ]
+    {
+        "src": "screenshot-index.png",
+        "sizes": "1920x982",
+        "type": "image/png",
+        "form_factor": "wide",
+        "label": "MNT LiveScore Landing Page"
+    },
+    {
+        "src": "screenshot-livescore.png",
+        "sizes": "1920x982",
+        "type": "image/png",
+        "form_factor": "wide",
+        "label": "MNT LiveScore Live Scores"
+    }
+]
 }
