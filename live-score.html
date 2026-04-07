@@ -104,7 +104,7 @@
 
         if (!Clerk.user) {
             
-            window.location.href = '/index.html';
+            window.location.href = 'index.html';
         }
         Clerk.mountUserButton(document.getElementById('user-button'));
 
@@ -115,7 +115,7 @@
     });
 
     function signOut() {
-        Clerk.signOut(() => window.location.href = '/index.html');
+        Clerk.signOut(() => window.location.href = 'index.html');
     }
 </script>
     
